@@ -187,8 +187,6 @@ jobs:
       #- destroy-environment
 
 
-            
-
 #   configure-infrastructure:
 #     docker:
 #       # Docker image here that supports Ansible
