@@ -23,7 +23,7 @@ Resources:
           CidrIp: 0.0.0.0/0
 
   EC2Instance:
-    Type: AWS::EC2::Instance_kk
+    Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
       SecurityGroups:
@@ -33,3 +33,4 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
+          
