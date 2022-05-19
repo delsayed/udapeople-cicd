@@ -1,51 +1,51 @@
 version: 2.1
 
 
-orbs: 
-  slack: circleci/slack@4.10.1
+# orbs: 
+#   slack: circleci/slack@4.10.1
 
-commands:
-  notify_on_failure:
-    steps:
-      - slack/notify:
-         event: fail
-         channel: C03FG3MH735
-         template: basic_fail_1
+# commands:
+#   notify_on_failure:
+#     steps:
+#       - slack/notify:
+#          event: fail
+#          channel: C03FG3MH735
+#          template: basic_fail_1
  
-  destroy-environment:
-    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-    parameters:
-      Workflow_ID:
-        type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:7}
-    steps:
-      - run:
-          name: Destroy environments
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
-            aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
-            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
+#   destroy-environment:
+#     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+#     parameters:
+#       Workflow_ID:
+#         type: string
+#         default: ${CIRCLE_WORKFLOW_ID:0:7}
+#     steps:
+#       - run:
+#           name: Destroy environments
+#           when: on_fail
+#           command: |
+#             aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
+#             aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
+#             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
 
-  revert-migrations:
-    description: Revert the last migration
-    parameters:
-      Workflow_ID:
-        type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:7}
-    steps:
-      - run:
-          name: Revert migrations
-          when: on_fail
-          command: |
-            SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<< parameters.Workflow_ID >>)
-            # Logic for reverting the database state
-            if (( $SUCCESS == 1 ));
-            then
-              cd ~/project/backend
-              npm install
-              npm run migration:revert
-            fi
+#   revert-migrations:
+#     description: Revert the last migration
+#     parameters:
+#       Workflow_ID:
+#         type: string
+#         default: ${CIRCLE_WORKFLOW_ID:0:7}
+#     steps:
+#       - run:
+#           name: Revert migrations
+#           when: on_fail
+#           command: |
+#             SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<< parameters.Workflow_ID >>)
+#             Logic for reverting the database state
+#             if (( $SUCCESS == 1 ));
+#             then
+#               cd ~/project/backend
+#               npm install
+#               npm run migration:revert
+#             fi
             
 jobs:
   build-frontend:
@@ -64,7 +64,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-deps
-      - notify_on_failure    
+      # - notify_on_failure    
 
   build-backend:
     docker:
@@ -82,7 +82,7 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-deps
-      - notify_on_failure
+      # - notify_on_failure
 
   test-frontend:
     docker:
@@ -361,7 +361,7 @@ workflows:
   default:
     jobs:
       - build-frontend
-      - build-backend
+      # - build-backend
       # - test-frontend:
       #     requires: [build-frontend]
       # - test-backend:
