@@ -2,6 +2,7 @@ version: 2.1
 
 
 orbs: 
+  node: circleci/node@5.0.2
   slack: circleci/slack@4.10.1
 
 commands:
@@ -287,7 +288,8 @@ jobs:
           name: Deploy frontend objects
           command: |
             cd frontend
-            npm install
+            npm instal
+            npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
