@@ -400,7 +400,7 @@ jobs:
       - destroy-environment
       - revert-migrations  
 
-  
+
   cloudfront-update:
     docker:
       - image: cimg/base:2022.04
@@ -469,8 +469,6 @@ jobs:
           event : pass
           channel: C03FG3MH735
           template: success_tagged_deployment_1
-
-
 
 workflows:
   default:
