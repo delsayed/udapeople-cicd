@@ -432,34 +432,29 @@ jobs:
       - revert-migrations
 
   cleanup:
-      docker:
-        - image: cimg/base:stable 
-      steps:
-        - checkout
-        - install_awscli
-        - attach_workspace:
-            at: ~/
-        - run:
-            name: Remove the old stacks from our production phase
-            command: |
-              export STACKS=($(aws cloudformation list-stacks \ 
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_awscli
+      - install_nodejs
+      - run:
+          name: Remove old stacks and files
+          command: |
+            export STACKS=($(aws cloudformation list-stacks \
                 --query "StackSummaries[*].StackName" \
-                --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+                --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
+            echo Stack names: "${STACKS[@]}"
 
-              echo Stack names: "${STACKS[@]}"
+            export OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/old_workflow_id)
+            echo Old Workflow ID: $OldWorkflowID 
 
-              export OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/Old_Workflow_ID)
-
-              echo "The old Workflow_ID: $OldWorkflowID"
-
-              if [[ "${OldWorkflowID}" =~ "${STACKS[@]}"  ]]
-              then
-                aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-                aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
-                aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-              else
-                echo "No stacks to be deleted"
-              fi
+            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            then
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+            fi
             
   notify_on_success:
     docker:
