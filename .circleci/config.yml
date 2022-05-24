@@ -418,7 +418,7 @@ jobs:
               --no-paginate --output text)"
 
             echo "Old WorkFlow ID is: $OLD_WORKFLOW_ID"
-            curl https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
+            curl https://kvdb.io/${KVDB_BUCKET}/Old_Workflow_ID -d "${OLD_WORKFLOW_ID}"
       - run:
           name: Update Cloudfront distribution
           command: |
@@ -446,7 +446,7 @@ jobs:
                 --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
             echo Stack names: "${STACKS[@]}"
 
-            export OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/old_workflow_id)
+            export OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/Old_Workflow_ID)
             echo Old Workflow ID: $OldWorkflowID 
 
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
@@ -468,35 +468,35 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - notify_on_success:
-      #     requires:
-      #      - build-frontend  
-      # - deploy-infrastructure:
-      #    requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #    filters:
-      #       branches:
-      #         only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-      - cleanup
-          # requires: [cloudfront-update]
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - notify_on_success:
+          requires:
+           - build-frontend  
+      - deploy-infrastructure:
+         requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+         filters:
+            branches:
+              only: [master]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
+      - cloudfront-update:
+          requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
