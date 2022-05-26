@@ -1,0 +1,8 @@
+1- URL 1 (Github Public Repo) = https://github.com/delsayed/udapeople-cicd.git
+
+2- URL 2 (Public URL for S3 Bucket) = http://udapeople-ab5417c.s3-website-us-east-1.amazonaws.com
+
+3- URL 3: (CloudFront Distribution) = https://dtmzoz2m353li.cloudfront.net
+
+4- URL 5: (Promethues Server Showing healthy Targets): http://ec2-54-167-179-151.compute-1.amazonaws.com:9090/targets
+
